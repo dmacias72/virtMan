@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "virtman">
 <!ENTITY author    "dmacias">
-<!ENTITY version   "2014.09.12">
+<!ENTITY version   "2014.09.12a">
 <!ENTITY category  "VM Support">
 <!ENTITY pluginURL "https://github.com/dmacias72/virtman_unRAID_6/raw/master/virtman.plg">
 ]>
@@ -256,7 +256,7 @@ Menu="OtherSettings"
 Icon="virtman.png"
 Author="Derek Macias"
 Type="php"
-Title="virtman"
+Title="Virtman"
 ]]>
 </INLINE>
 </FILE>
@@ -522,7 +522,7 @@ function isNumber(n) {
 <INLINE>
 **Libvirt support**
 
-Libvirt is collection of software that provides a convenient way to manage virtual machines and other virtualization functionality, such as storage and network interface management. These software pieces include an API library, a daemon (libvirtd), and a command line utility (virsh). virtman allows control and persistent configuration for libvirt.
+Libvirt is collection of software that provides a convenient way to manage virtual machines and other virtualization functionality, such as storage and network interface management. These software pieces include an API library, a daemon (libvirtd), and a command line utility (virsh). Virtman allows control and persistent configuration for libvirt.
 </INLINE>
 </FILE>
 

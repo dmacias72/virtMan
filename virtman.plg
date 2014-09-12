@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "virtman">
 <!ENTITY author    "dmacias">
-<!ENTITY version   "2014.09.12b">
+<!ENTITY version   "2014.09.12c">
 <!ENTITY category  "VM Support">
 <!ENTITY pluginURL "https://github.com/dmacias72/virtman_unRAID_6/raw/master/virtman.plg">
 ]>
@@ -521,8 +521,11 @@ Libvirt is collection of software that provides a convenient way to manage virtu
 <FILE Run="/bin/bash" Method="remove">
 <INLINE>
 rm -r /usr/local/emhttp/plugins/&name;
-rm -r /boot/config/plugins/&name;
 rm -f /etc/rc.d/rc.virtman
+if [ "$(mount | grep virtman.img)" ]; then
+  umount /etc/libvirt
+fi
+
 </INLINE>
 </FILE>
 

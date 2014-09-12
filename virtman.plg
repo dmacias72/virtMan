@@ -155,7 +155,6 @@ write_config()
 	sleep 1
 }
 
-
 virtman_enable()
 {
 	SERVICE=enable
@@ -509,6 +508,7 @@ function isNumber(n) {
 </script>
 ]]>
 </INLINE>
+</FILE>
 
 <!-- create plugin README.md file -->
 <FILE Name="/usr/local/emhttp/plugins/&name;/README.md">
@@ -545,4 +545,3 @@ rm /tmp/virtman-install
 </FILE>
 
 </PLUGIN>
-

@@ -480,7 +480,6 @@ else
 	<form name="virtman_settings" method="POST" action="/update.htm" target="progressFrame">
 		<input type="hidden" name="cmd" value="/etc/rc.d/rc.virtman">
 		<table class="settings">
-			<br />
 			<tr>
 				<td>Enable libvirt:
 					<input type="checkbox" name="enable" <?=($virtman_service=="enable")?"checked=\"checked\"":"";?> onChange="checkENABLE(this.form);">

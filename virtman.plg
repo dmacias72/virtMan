@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "virtman">
 <!ENTITY author    "dmacias">
-<!ENTITY version   "2014.09.12c">
+<!ENTITY version   "2014.09.13">
 <!ENTITY category  "VM Support">
 <!ENTITY pluginURL "https://github.com/dmacias72/virtman_unRAID_6/raw/master/virtman.plg">
 ]>
@@ -163,12 +163,14 @@ write_config()
 
 virtman_enable()
 {
+	echo "Applying Settings..."
 	SERVICE=enable
 	write_config
 }
 
 virtman_disable()
 {
+	echo "Applying Settings..."
 	SERVICE=disable
 	write_config
 }
@@ -478,15 +480,15 @@ else
 	<form name="virtman_settings" method="POST" action="/update.htm" target="progressFrame">
 		<input type="hidden" name="cmd" value="/etc/rc.d/rc.virtman">
 		<table class="settings">
+			<br />
 			<tr>
-				<td>Enable libvirt:</td>
-				<td>
-					<select name="arg1" size="1">
-						<?=mk_option($virtman_service, "disable", "No");?>
-						<?=mk_option($virtman_service, "enable", "Yes");?>
-					</select>
+				<td>Enable libvirt:
+					<input type="checkbox" name="enable" <?=($virtman_service=="enable")?"checked=\"checked\"":"";?> onChange="checkENABLE(this.form);">
+					<input type="hidden" name="arg1" value="<?=$virtman_service;?>">     
 				</td>
 			</tr>
+			<br />
+			<td></td>
 			<tr><td colspan="2"><div style="background-color:#FFFFFF;border:1px solid #000000;height:1px;width:100%;font-size:8px;"> </div></td></tr>
 		</table>
 		<div align="center">
@@ -501,6 +503,15 @@ else
 
 function isNumber(n) {
 	return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+
+function checkENABLE(form) {
+	if (form.enable.checked == false ) {
+		form.arg1.value = "disable";
+	} else {
+		form.arg1.value = "enable";
+	}
 }
 
 </script>

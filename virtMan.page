@@ -48,7 +48,7 @@ if ($virtMan_curversion == "")
 	$virtMan_curversion = "couldn't determine the libvirt version"; 
 ?>
 
-<div>
+<div style="width: 49%; float:left">
 	<div id="title">
 		<span class="left">Status:&#32;
 			<?if ($virtMan_running=="yes"):?>

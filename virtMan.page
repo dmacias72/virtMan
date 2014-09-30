@@ -1,0 +1,128 @@
+Icon="virtMan.png"
+Menu="OtherSettings"
+Title="virtMan"
+---
+<?php include '/usr/local/emhttp/plugins/virtMan/virtMan.css';?>
+<?PHP
+# -------------------------------------------------------------------------
+## Load current config file and check if program is installed already
+# -------------------------------------------------------------------------
+
+# This will clean any ^M characters caused by windows from the config file before use
+if (file_exists("/boot/config/plugins/virtMan/virtMan.cfg"))
+	shell_exec("sed -i 's!\r!!g' '/boot/config/plugins/virtMan/virtMan.cfg'");
+
+$virtMan_cfg = parse_ini_file( "/boot/config/plugins/virtMan/virtMan.cfg" );
+
+# -------------------------------------------------------------------------
+## Check is program is running to get extra information
+# -------------------------------------------------------------------------
+# Service Status Variable
+if (isset($virtMan_cfg['SERVICE']) && ($virtMan_cfg['SERVICE'] == "enable" || $virtMan_cfg['SERVICE'] == "disable"))
+	$virtMan_service = $virtMan_cfg['SERVICE'];
+else
+	$virtMan_service = "enable";
+
+$virtMan_running = trim ( shell_exec ( "[ -f /proc/`cat /var/run/libvirt/libvirtd.pid 2> /dev/null`/exe ] && echo 'yes' || echo 'no' 2> /dev/null" ) );
+
+# Check if virtMan.img exists
+if (file_exists( "/boot/config/plugins/virtMan/virtMan.img" )) {
+	$virtMan_filecheck = "yes";
+} else {
+	$virtMan_filecheck = "no";
+}
+
+# if virtMan.img exists check if mounted then mount if not
+if ($virtMan_filecheck == "yes") {
+	if (shell_exec ( "mount | grep virtMan.img" ) == "") {
+		shell_exec ( "mount -t ext4 /boot/config/plugins/virtMan/virtMan.img /etc/libvirt" );
+	}
+}
+
+# Get free space left on virtMan.img
+$virtMan_storagesize = number_format ( disk_free_space ( "/etc/libvirt" ) /1048576 , 1 );
+
+# Get current installed version of the program
+$virtMan_curversion = trim ( shell_exec ( "virsh --version" ) );
+if ($virtMan_curversion == "")
+	$virtMan_curversion = "couldn't determine the libvirt version"; 
+?>
+
+<div>
+	<div id="title">
+		<span class="left">Status:&#32;
+			<?if ($virtMan_running=="yes"):?>
+					<span class="green"><b>RUNNING</b></span>
+				<span style="font-size:12px;"> with libvirt version: <b><?=$virtMan_curversion?></b></span>
+			<?else:?>
+				<span class="red"><b>STOPPED</b></span>
+			<?endif;?>
+		</span>
+	</div>  
+		<?if ($virtMan_running=="yes"):?>
+			<div style="position:relative;float:left;width:50%;text-align:right; margin-bottom:24px">
+				<form name="virtMan_start_stop" method="POST" action="/plugins/webGui/exec.php" target="progressFrame">
+					<input type="hidden" name="command" value="/etc/rc.d/rc.libvirt stop  ">
+					<input type="submit" value="Stop">
+				</form>
+			</div>
+			<div style="position:relative;float:left;width:50%;margin-bottom:24px">
+				<form name="virtMan_restart" method="POST" action="/plugins/webGui/exec.php" target="progressFrame">
+					<input type="hidden" name="command" value="/etc/rc.d/rc.libvirt restart  ">
+					<input type="submit" value="Restart">
+				</form>
+			</div>
+		<?else:?>
+			<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom:24px">
+				<form name="virtMan_start" method="POST" action="/plugins/webGui/exec.php" target="progressFrame">
+					<input type="hidden" name="command" value="/etc/rc.d/rc.libvirt start  " />
+					<input type="submit" value="Start">
+				</form>
+			</div>
+		<?endif;?>
+	<div id="title">
+		<span class="left">Information:&#32;</span>
+	</div>
+	<? if ($virtMan_filecheck == "no"):?>
+		<p style="color:red;margin-left:10px;margin-right:10px;"><b>WARNING:</b> Your config image /boot/config/plugins/virtMan/virtMan.img doesn't exist</p>
+		<?else:?>
+		<p style="margin-left:10px;margin-bottom:0px;"><b>Total Free Space: <?=$virtMan_storagesize?> M</b></p>
+	<?endif;?>
+</div>
+<div style="width: 49%; float:right">
+	<div id="title">
+		<span class="left">Configuration:&#32;</span>
+	</div>
+	<form name="virtMan_settings" method="POST" action="/plugins/webGui/exec.php" target="progressFrame">
+		<input type="hidden" name="command" value="/etc/rc.d/rc.virtMan">
+		<table class="settings">
+			<tr>
+				<td>Enable libvirt:
+					<input type="checkbox" name="enable" <?=($virtMan_service=="enable")?"checked=\"checked\"":"";?> onChange="checkENABLE(this.form);">
+					<input type="hidden" name="arg1" value="<?=$virtMan_service;?>">     
+				</td>
+			</tr>
+			<br />
+			<td></td>
+			<tr><td colspan="2"><div style="background-color:#FFFFFF;border:1px solid #000000;height:1px;width:100%;font-size:8px;"> </div></td></tr>
+		</table>
+		<div align="center">
+			<input type="submit" value="Apply" style="margin-bottom:8px">
+			<button type="button" style="margin-bottom:35px" onClick="done();">Done</button>
+		</div>
+	</form>
+	<br/>
+</div>
+
+
+<script type="text/javascript">
+
+function checkENABLE(form) {
+	if (form.enable.checked == false ) {
+		form.arg1.value = "disable";
+	} else {
+		form.arg1.value = "enable";
+	}
+}
+
+</script>

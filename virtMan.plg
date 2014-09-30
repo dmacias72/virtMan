@@ -1,0 +1,84 @@
+<?xml version='1.0' standalone='yes'?>
+
+<!DOCTYPE PLUGIN [
+<!ENTITY name      "virtMan">
+<!ENTITY author    "dmacias72">
+<!ENTITY version   "2014.09.28a">
+<!ENTITY category  "VM Support">
+<!ENTITY pluginURL "https://github.com/dmacias72/virtMan/raw/master/virtMan.plg">
+<!ENTITY plugin	   "/boot/config/plugins/&name;">
+<!ENTITY emhttp	   "/usr/local/emhttp/plugins/&name;">
+]>
+
+<PLUGIN  name="&name;"
+         author="&author;"
+         version="&version;"
+         category="&category;"
+         pluginURL="&pluginURL;"
+	 plugin="&plugin;"
+	 emhttp="&emhttp;">
+
+<!--
+This Plugin mounts a loopback image for Libvirt 1.2.8 and up
+-->
+
+<FILE Name="/tmp/hp-chkconf" Run="/bin/bash">
+<INLINE>
+<![CDATA[
+#!/bin/sh
+# This will check each entry in the config so nothing is missing, and if missing, sets to default
+CFGFILE=/boot/config/plugins/virtman/virtman.cfg
+[ ! `cat "$CFGFILE" | grep SERVICE` ] && echo "SERVICE=\"enable\"" >> "$CFGFILE"
+rm /tmp/hp-chkconf
+]]>
+</INLINE>
+</FILE>
+
+<!--
+get from github as tarball
+-->
+<FILE Name="&plugin;/&name;-&version;.tar.gz">
+<URL>"https://github.com/&author;/&name;/archive/&version;.tar.gz"</URL>
+</FILE>
+
+<!--
+The 'install' script.
+-->
+<FILE Run="/bin/bash" Method="install">
+<INLINE> 
+if [ ! -d &emhttp; ]; then
+ 	mkdir -p &emhttp;
+fi 
+#rename old plugin to new
+if [ -f /boot/config/plugins/virtman/virtman.png ]; then
+	mv /boot/config/plugins/virtman &plugin;.old
+        mkdir -p &plugin;
+	mv &plugin;.old/virtman.img &plugin;/virtMan.img
+	mv &plugin;.old/virtman.cfg &plugin;/virtMan.cfg
+fi
+
+tar -zxf &plugin;/&name;-&version;.tar.gz --strip=1 -C &emhttp;/
+find &plugin; -type f -iname "*.tar.gz" ! -iname "&name;-&version;.tar.gz" -delete
+cp -nr /usr/local/emhttp/plugins/&name;/&name; /boot/config/plugins
+
+# mount conf image if not already mounted 
+if [ ! "$(mount | grep &name;.img)" ]; then
+  mount -t ext4 &plugin;/&name;.img /etc/libvirt
+fi
+</INLINE>
+</FILE>
+
+<!--
+The 'remove' script.
+-->
+<FILE Run="/bin/bash" Method="remove">
+<INLINE>
+rm -rf &emhttp;
+if [ "$(mount | grep virtMan.img)" ]; then
+  umount /etc/libvirt
+fi
+
+</INLINE>
+</FILE>
+
+</PLUGIN>

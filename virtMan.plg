@@ -22,18 +22,6 @@
 This Plugin mounts a loopback image for Libvirt 1.2.8 and up
 -->
 
-<FILE Name="/tmp/hp-chkconf" Run="/bin/bash">
-<INLINE>
-<![CDATA[
-#!/bin/sh
-# This will check each entry in the config so nothing is missing, and if missing, sets to default
-CFGFILE=/boot/config/plugins/virtMan/virtMan.cfg
-[ ! `cat "$CFGFILE" | grep SERVICE` ] && echo "SERVICE=\"enable\"" >> "$CFGFILE"
-rm /tmp/hp-chkconf
-]]>
-</INLINE>
-</FILE>
-
 <!--
 get from github as tarball
 -->
@@ -78,6 +66,18 @@ if [ "$(mount | grep virtMan.img)" ]; then
   umount /etc/libvirt
 fi
 
+</INLINE>
+</FILE>
+
+<FILE Name="/tmp/hp-chkconf" Run="/bin/bash">
+<INLINE>
+<![CDATA[
+#!/bin/sh
+# This will check each entry in the config so nothing is missing, and if missing, sets to default
+CFGFILE=/boot/config/plugins/virtMan/virtMan.cfg
+[ ! `cat "$CFGFILE" | grep SERVICE` ] && echo "SERVICE=\"enable\"" >> "$CFGFILE"
+rm /tmp/hp-chkconf
+]]>
 </INLINE>
 </FILE>
 

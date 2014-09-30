@@ -7,12 +7,12 @@ Title="virtMan"
 # -------------------------------------------------------------------------
 ## Load current config file and check if program is installed already
 # -------------------------------------------------------------------------
+$virtMan_cfgfile = "/boot/config/plugins/virtMan/virtMan.cfg";
 
 # This will clean any ^M characters caused by windows from the config file before use
-if (file_exists("/boot/config/plugins/virtMan/virtMan.cfg"))
-	shell_exec("sed -i 's!\r!!g' '/boot/config/plugins/virtMan/virtMan.cfg'");
-
-$virtMan_cfg = parse_ini_file( "/boot/config/plugins/virtMan/virtMan.cfg" );
+if (file_exists("$virtMan_cfgfile"))
+	shell_exec("sed -i 's!\r!!g' '$virtMan_cfgfile'");
+$virtMan_cfg = parse_ini_file( "$virtMan_cfgfile" );
 
 # -------------------------------------------------------------------------
 ## Check is program is running to get extra information
@@ -93,13 +93,13 @@ if ($virtMan_curversion == "")
 	<div id="title">
 		<span class="left">Configuration:&#32;</span>
 	</div>
-	<form name="virtMan_settings" method="POST" action="/plugins/webGui/exec.php" target="progressFrame">
-		<input type="hidden" name="command" value="/etc/rc.d/rc.virtMan">
+	<form name="virtMan_settings" method="POST" action="/plugins/webGui/update_cfg.php" target="progressFrame">
+		<input type="hidden" name="#file" value="<?=$virtMan_cfgfile;?>" />
 		<table class="settings">
 			<tr>
 				<td>Enable libvirt:
 					<input type="checkbox" name="enable" <?=($virtMan_service=="enable")?"checked=\"checked\"":"";?> onChange="checkENABLE(this.form);">
-					<input type="hidden" name="arg1" value="<?=$virtMan_service;?>">     
+					<input type="hidden" name="SERVICE" value="<?=$virtMan_service;?>">     
 				</td>
 			</tr>
 			<br />
@@ -119,9 +119,9 @@ if ($virtMan_curversion == "")
 
 function checkENABLE(form) {
 	if (form.enable.checked == false ) {
-		form.arg1.value = "disable";
+		form.SERVICE.value = "disable";
 	} else {
-		form.arg1.value = "enable";
+		form.SERVICE.value = "enable";
 	}
 }
 

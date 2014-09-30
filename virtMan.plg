@@ -37,13 +37,6 @@ The 'install' script.
 if [ ! -d &emhttp; ]; then
  	mkdir -p &emhttp;
 fi 
-#rename old plugin to new
-if [ -f /boot/config/plugins/virtman/virtman.png ]; then
-	mv /boot/config/plugins/virtman &plugin;.old
-        mkdir -p &plugin;
-	mv &plugin;.old/virtman.img &plugin;/virtMan.img
-	mv &plugin;.old/virtman.cfg &plugin;/virtMan.cfg
-fi
 
 tar -zxf &plugin;/&name;-&version;.tar.gz --strip=1 -C &emhttp;/
 find &plugin; -type f -iname "*.tar.gz" ! -iname "&name;-&version;.tar.gz" -delete

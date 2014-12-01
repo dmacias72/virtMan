@@ -1,5 +1,7 @@
 Icon="virtMan.png"
 Menu="OtherSettings"
+Version="2014.12.01"
+Author="dmacias"
 Title="virtMan"
 ---
 <?php 

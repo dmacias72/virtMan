@@ -2,8 +2,7 @@ Icon="virtMan.png"
 Menu="OtherSettings"
 Title="virtMan"
 ---
-<?php include '/usr/local/emhttp/plugins/virtMan/virtMan.css';?>
-<?PHP
+<?php 
 # -------------------------------------------------------------------------
 ## Load current config file and check if program is installed already
 # -------------------------------------------------------------------------
@@ -15,7 +14,7 @@ if (file_exists("$virtMan_cfgfile"))
 $virtMan_cfg = parse_ini_file( "$virtMan_cfgfile" );
 
 # -------------------------------------------------------------------------
-## Check is program is running to get extra information
+## Check if program is running to get extra information
 # -------------------------------------------------------------------------
 # Service Status Variable
 if (isset($virtMan_cfg['SERVICE']) && ($virtMan_cfg['SERVICE'] == "enable" || $virtMan_cfg['SERVICE'] == "disable"))
@@ -61,22 +60,22 @@ if ($virtMan_curversion == "")
 	</div>  
 		<?if ($virtMan_running=="yes"):?>
 			<div style="position:relative;float:left;width:50%;text-align:right; margin-bottom:24px">
-				<form name="virtMan_start_stop" method="POST" action="/plugins/webGui/exec.php" target="progressFrame">
-					<input type="hidden" name="command" value="/etc/rc.d/rc.libvirt stop  ">
-					<input type="submit" value="Stop">
+				<form name="virtMan_start_stop" method="POST" action="/update.htm" target="progressFrame">
+					<input type="hidden" name="cmd" value="/etc/rc.d/rc.libvirt stop  ">
+					<input type="submit" name="runCmd" value="Stop">
 				</form>
 			</div>
 			<div style="position:relative;float:left;width:50%;margin-bottom:24px">
-				<form name="virtMan_restart" method="POST" action="/plugins/webGui/exec.php" target="progressFrame">
-					<input type="hidden" name="command" value="/etc/rc.d/rc.libvirt restart  ">
-					<input type="submit" value="Restart">
+				<form name="virtMan_restart" method="POST" action="/update.htm" target="progressFrame">
+					<input type="hidden" name="cmd" value="/etc/rc.d/rc.libvirt restart  ">
+					<input type="submit" name="runCmd" value="Restart">
 				</form>
 			</div>
 		<?else:?>
 			<div style="position:relative;float:left;width:100%;text-align:center;margin-bottom:24px">
-				<form name="virtMan_start" method="POST" action="/plugins/webGui/exec.php" target="progressFrame">
-					<input type="hidden" name="command" value="/etc/rc.d/rc.libvirt start  " />
-					<input type="submit" value="Start">
+				<form name="virtMan_start" method="POST" action="/update.htm" target="progressFrame">
+					<input type="hidden" name="cmd" value="/etc/rc.d/rc.libvirt start  " />
+					<input type="submit" name="runCmd" value="Start">
 				</form>
 			</div>
 		<?endif;?>
@@ -93,7 +92,7 @@ if ($virtMan_curversion == "")
 	<div id="title">
 		<span class="left">Configuration:&#32;</span>
 	</div>
-	<form name="virtMan_settings" method="POST" action="/plugins/webGui/update_cfg.php" target="progressFrame">
+	<form name="virtMan_settings" method="POST" action="/update.php" target="progressFrame">
 		<input type="hidden" name="#file" value="<?=$virtMan_cfgfile;?>" />
 		<table class="settings">
 			<tr>
@@ -107,7 +106,7 @@ if ($virtMan_curversion == "")
 			<tr><td colspan="2"><div style="background-color:#FFFFFF;border:1px solid #000000;height:1px;width:100%;font-size:8px;"> </div></td></tr>
 		</table>
 		<div align="center">
-			<input type="submit" value="Apply" style="margin-bottom:8px">
+			<input type="submit" name="runCmd" value="Apply" style="margin-bottom:8px">
 			<button type="button" style="margin-bottom:35px" onClick="done();">Done</button>
 		</div>
 	</form>

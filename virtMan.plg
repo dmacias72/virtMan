@@ -3,8 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "virtMan">
 <!ENTITY author    "dmacias72">
-<!ENTITY version   "2014.11.30">
-<!ENTITY category  "VM Support">
+<!ENTITY version   "2014.12.01">
 <!ENTITY pluginURL "https://github.com/dmacias72/virtMan/raw/master/virtMan.plg">
 <!ENTITY plugin	   "/boot/config/plugins/&name;">
 <!ENTITY emhttp	   "/usr/local/emhttp/plugins/&name;">
@@ -13,7 +12,6 @@
 <PLUGIN  name="&name;"
          author="&author;"
          version="&version;"
-         category="&category;"
          pluginURL="&pluginURL;"
 	 plugin="&plugin;"
 	 emhttp="&emhttp;">
